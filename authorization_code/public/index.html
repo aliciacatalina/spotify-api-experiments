@@ -30,7 +30,7 @@
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
       </div>
     </div>
-
+    <div id="playlist"></div>
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>
       <div class="media">
@@ -61,6 +61,7 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="spotify-api-wrapper.js"></script>
     <script>
       (function() {
 
@@ -114,11 +115,26 @@
                   $('#loggedin').show();
                 }
             });
+            $.ajax({
+                url: 'https://api.spotify.com/v1/users/113023278/playlists/062z4cINlOr8pvDctOvgvJ',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+                  //document.getElementById('playlist').innerHTML = response['items'];
+                  renderTracks(response);
+
+                }
+            });
           } else {
               // render initial screen
               $('#login').show();
               $('#loggedin').hide();
           }
+
+          function renderTracks(tracks) {
+            document.getElementById('playlist').innerHTML = '<iframe src="https://embed.spotify.com/?uri=spotify:user:113023278:playlist:062z4cINlOr8pvDctOvgvJ" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>';
+            }
 
           document.getElementById('obtain-new-token').addEventListener('click', function() {
             $.ajax({
